@@ -1,3 +1,6 @@
+# 입력스트링을 한라인씩 입력받는다.
+#
+
 ################################
 # DATA 
 ################################
@@ -45,20 +48,11 @@ main:
 userinput.loop: 
     la   $a0, strs($t0)  # address of buffer to which to read
     li   $s1, 0
-    
-userinput.onebyte:    
+       
     li   $v0, 8          # syscall for read string
-    li   $a1, 2          # buffer length
+    li   $a1, 100        # buffer length
     syscall              # read from fil
-    
-    addi $s1, $s1, 1
-    beq  $s1, 100, userinput.oneline_end
-    lb   $t2, ($a0)
-    li   $t5, 0x0A
-    addi $a0, $a0, 1
-    bne  $t2, $t5, userinput.onebyte
-    
-userinput.oneline_end:
+   
 	sw   $t0, ($s2)
 	addi $s2, $s2, 4
     add  $t0, $t0, 100
@@ -110,8 +104,8 @@ sort.ok:
 cmp_gt:
 	lb   $t0, ($a0)  # load a byte from each string
 	lb   $t1, ($a1)
-	beq  $t0, 0x0d, cmp.gt # if only \r\n string  
-	beq  $t1, 0x0d, cmp.le
+	beq  $t0, 0x0A, cmp.gt # if only \r\n string  
+	beq  $t1, 0x0A, cmp.le
 	beqz $t0, cmp.le
 	beqz $t1, cmp.gt
 	ble  $t0, $t1, cmp.le
